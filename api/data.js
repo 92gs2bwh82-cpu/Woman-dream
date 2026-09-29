@@ -142,7 +142,23 @@ module.exports = async (req, res) => {
       res.status(401).json({ erreur: 'Code incorrect' });
       return;
     }
-
+     if (req.method === 'PATCH') {
+      if (codeEnv) {
+        res.status(409).json({ erreur: 'Le code est défini dans Vercel' });
+        return;
+      }
+      const nouveau = String((req.body && req.body.nouveau) || '');
+      if (nouveau.length < 6) {
+        res.status(400).json({ erreur: 'Code trop court' });
+        return;
+      }
+      const sel = crypto.randomBytes(16).toString('hex');
+      await sql`UPDATE womandream
+        SET contenu = ${JSON.stringify({ sel, hash: hacher(nouveau, sel) })}::jsonb, version = version + 1, maj = now()
+        WHERE id = 2`;
+      res.status(200).json({ ok: true });
+      return;
+    }
     if (req.method === 'GET') {
       res.status(200).json({ contenu: donnees ? donnees.contenu : null });
       return;
