@@ -7,6 +7,8 @@
 <meta name="theme-color" content="#FBF6F8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Woman Dream">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icone-180.png">
 <title>Woman Dream · Rendez-vous</title>
 <style>
 :root{
@@ -19,7 +21,6 @@
   --trait:#E4D3DC;
   --piste:#EBDDE5;
   --vert:#1F7A55;
-  --ambre:#8A5A00;
   --blanc:#FFFFFF;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -35,7 +36,6 @@ h2{font-size:26px;font-weight:700;margin:34px 0 10px}
 .salon{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--rose);margin:0 0 14px}
 .legende{color:var(--muted);font-size:15px;font-weight:500}
 .vide{color:var(--muted);padding:18px 0;font-size:15px}
-
 body.verrou nav{display:none}
 body.verrou main{padding-top:60px;padding-bottom:40px}
 
@@ -51,12 +51,15 @@ body.verrou main{padding-top:60px;padding-bottom:40px}
 
 /* Semaine */
 .semaine{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:170px;margin-top:8px}
-.col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:14px;font-weight:600;color:var(--muted)}
+.col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:14px;font-weight:600;color:var(--muted);background:none;border:0;padding:0;cursor:pointer}
 .col .n{margin-bottom:4px;color:var(--ink);font-weight:700;min-height:20px}
 .col .barre{width:100%;border-radius:8px 8px 3px 3px;background:var(--piste);min-height:8px}
 .col.plein .barre{background:var(--rose)}
+.col .j{margin-top:6px;padding:2px 0}
 .col.auj .j{color:var(--rose);font-weight:800}
-.col .j{margin-top:6px}
+.col.sel .barre{background:var(--rose-fort);box-shadow:0 0 0 3px var(--rose-doux)}
+.col.sel .j{color:var(--ink);font-weight:800;text-decoration:underline;text-underline-offset:4px}
+.astuce{color:var(--muted);font-size:14px;margin-top:6px}
 
 /* Lignes */
 .ligne{display:grid;grid-template-columns:76px 1fr auto;gap:12px;align-items:center;padding:16px 0;border-bottom:1.5px solid var(--trait);width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left;cursor:pointer}
@@ -64,6 +67,8 @@ body.verrou main{padding-top:60px;padding-bottom:40px}
 .ligne .nom{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--ink);line-height:1.2}
 .ligne .sous{color:var(--muted);font-size:15px;font-weight:500}
 .ligne .droite{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.ligne.annule{opacity:.62}
+.ligne.annule .nom{text-decoration:line-through}
 .montant{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--ink);white-space:nowrap}
 .montant.rose{color:var(--rose)}
 .badge{display:inline-block;border-radius:999px;padding:5px 12px;font-size:14px;font-weight:700;background:var(--rose-doux);color:var(--rose-fort);white-space:nowrap}
@@ -73,6 +78,12 @@ body.verrou main{padding-top:60px;padding-bottom:40px}
 .encaisser{border:0;background:var(--rose);color:#fff;border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px;cursor:pointer}
 .tarif{grid-template-columns:1fr auto}
 .tarif .nom{font-size:20px}
+.grp{font-size:22px;margin:26px 0 2px}
+
+/* Onglets */
+.segments{display:flex;gap:2px;background:var(--piste);border-radius:18px;padding:5px}
+.seg{flex:1 1 auto;border:0;background:transparent;border-radius:14px;padding:11px 6px;font-size:15px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
+.seg.on{background:var(--blanc);color:var(--ink);font-weight:800;box-shadow:0 1px 3px rgba(36,16,47,.18)}
 
 /* Boutons */
 .btn{display:block;width:100%;border:0;border-radius:18px;padding:17px 18px;font-size:18px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;margin-top:12px}
@@ -81,6 +92,7 @@ body.verrou main{padding-top:60px;padding-bottom:40px}
 .btn.contour{background:var(--blanc);color:var(--ink);border:1.5px solid var(--trait)}
 .btn.danger{background:var(--blanc);color:#A3122F;border:1.5px solid #E8B9C3}
 .btn.wa{background:#1F8F4E;color:#fff}
+.lien{background:none;border:0;color:var(--rose);font-weight:700;font-size:16px;padding:8px 0;cursor:pointer}
 
 /* Champs */
 label{display:block;color:var(--muted);font-weight:600;font-size:15px;margin:16px 0 6px}
@@ -93,21 +105,6 @@ textarea.champ{min-height:150px;resize:vertical}
 .case input{width:24px;height:24px;accent-color:var(--rose)}
 .erreur{color:#A3122F;font-weight:700;margin-top:12px;font-size:15px;min-height:20px}
 .note{color:var(--muted);font-size:15px;margin-top:14px}
-
-/* Agenda */
-.mois{display:flex;align-items:center;justify-content:space-between;margin:6px 0 10px}
-.mois h1{font-size:28px;text-transform:capitalize}
-.nav-mois{display:flex;gap:8px}
-.rond{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--trait);background:var(--blanc);font-size:22px;font-weight:700;color:var(--ink);cursor:pointer}
-.jours{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
-.jours .ent{font-size:13px;font-weight:700;color:var(--muted);padding:6px 0}
-.jour{aspect-ratio:1/1;border:0;border-radius:14px;background:transparent;font-size:17px;font-weight:600;color:var(--ink);cursor:pointer;position:relative}
-.jour.autre{color:#A594B0}
-.jour.auj{box-shadow:inset 0 0 0 2px var(--rose)}
-.jour.sel{background:var(--rose);color:#fff}
-.jour .pt{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:var(--rose)}
-.jour.sel .pt{background:#fff}
-.lien{background:none;border:0;color:var(--rose);font-weight:700;font-size:16px;padding:8px 0;cursor:pointer}
 
 /* Barre du bas */
 nav{position:fixed;left:0;right:0;bottom:0;background:#F1E8EE;border-top:1px solid var(--trait);padding:10px 12px calc(10px + env(safe-area-inset-bottom));z-index:20}
@@ -153,8 +150,19 @@ button:focus-visible{outline:3px solid var(--rose);outline-offset:2px}
 /* ---------- Données ---------- */
 var CLE = 'womandream.v1';
 var memoire = null;
+
+function normaliser(d){
+  d = d || {};
+  d.reglages = d.reglages || { nom:'Woman Dream', devise:'FCFA' };
+  d.reglagesMaj = d.reglagesMaj || 0;
+  d.prestations = Array.isArray(d.prestations) ? d.prestations : [];
+  d.rdv = Array.isArray(d.rdv) ? d.rdv : [];
+  d.supprimes = d.supprimes || {};
+  d.maj = d.maj || 0;
+  return d;
+}
 function parDefaut(){
-  return {
+  return normaliser({
     reglages:{ nom:'Woman Dream', devise:'FCFA' },
     prestations:[
       {id:'p1', nom:'Maquillage', prix:20000},
@@ -165,61 +173,139 @@ function parDefaut(){
     ],
     rdv:[],
     derniereSauvegarde:null
-  };
+  });
 }
 function charger(){
-  try{ var r = localStorage.getItem(CLE); if(r) return JSON.parse(r); }catch(e){}
-  return memoire || parDefaut();
+  try{ var r = localStorage.getItem(CLE); if(r) return normaliser(JSON.parse(r)); }catch(e){}
+  return memoire ? normaliser(memoire) : parDefaut();
 }
 var D = charger();
+
+function sauvegardeLocale(){
+  memoire = D;
+  try{ localStorage.setItem(CLE, JSON.stringify(D)); }catch(e){}
+}
+function sauver(){
+  D.maj = Date.now();
+  sauvegardeLocale();
+  planifierEnvoi();
+}
+
+/* ---------- Fusion des données (même règle que sur le serveur) ---------- */
+function fusionner(a, b){
+  a = a || {}; b = b || {};
+  var sup = {};
+  [a.supprimes, b.supprimes].forEach(function(s){
+    Object.keys(s || {}).forEach(function(k){ sup[k] = Math.max(sup[k] || 0, s[k] || 0); });
+  });
+  function liste(cle){
+    var m = {};
+    [a[cle], b[cle]].forEach(function(l){
+      (l || []).forEach(function(x){
+        if(!x || !x.id) return;
+        var v = x.maj || 0;
+        if(sup[x.id] && sup[x.id] >= v) return;
+        var deja = m[x.id];
+        if(!deja || (deja.maj || 0) < v || ((deja.maj || 0) === v && canon(x) > canon(deja))) m[x.id] = x;
+      });
+    });
+    return Object.keys(m).sort().map(function(id){ return m[id]; });
+  }
+  var ra = a.reglagesMaj || 0, rb = b.reglagesMaj || 0;
+  return {
+    reglages: (function(){
+      var A = a.reglages || b.reglages, B = b.reglages || a.reglages;
+      return (rb > ra ? B : ra > rb ? A : canon(A) <= canon(B) ? A : B) || { nom:'Woman Dream', devise:'FCFA' };
+    })(),
+    reglagesMaj: Math.max(ra, rb),
+    prestations: liste('prestations'),
+    rdv: liste('rdv'),
+    supprimes: sup,
+    maj: Math.max(a.maj || 0, b.maj || 0),
+    derniereSauvegarde: b.derniereSauvegarde || a.derniereSauvegarde || null
+  };
+}
+function canon(o){
+  if(Array.isArray(o)) return '[' + o.map(canon).join(',') + ']';
+  if(o && typeof o === 'object') return '{' + Object.keys(o).sort().map(function(k){ return JSON.stringify(k) + ':' + canon(o[k]); }).join(',') + '}';
+  return JSON.stringify(o);
+}
+function signature(d){
+  function tri(l){ return (l || []).slice().sort(function(x, y){ return x.id < y.id ? -1 : 1; }); }
+  return canon({ r:d.reglages, rm:d.reglagesMaj || 0, p:tri(d.prestations), v:tri(d.rdv), s:d.supprimes || {} });
+}
 
 /* ---------- Synchronisation en ligne ---------- */
 var CODE_CLE = 'womandream.code';
 var memCode = '';
 var minuteur = null;
+var envoiEnCours = false, renvoyer = false;
 var sync = { etat:'local', derniere:null }; /* local · ok · attente · hors */
 
 function code(){
   try{ return localStorage.getItem(CODE_CLE) || memCode; }catch(e){ return memCode; }
 }
+function memoriserCode(v){
+  try{ localStorage.setItem(CODE_CLE, v); }catch(e){ memCode = v; }
+}
 function oublierCode(){
   memCode = '';
   try{ localStorage.removeItem(CODE_CLE); }catch(e){}
 }
-function sauver(){
-  D.maj = Date.now();
-  memoire = D;
-  try{ localStorage.setItem(CLE, JSON.stringify(D)); }catch(e){}
-  planifierEnvoi();
-}
 function planifierEnvoi(){
   if(sync.etat === 'local' || !code()) return;
   clearTimeout(minuteur);
-  minuteur = setTimeout(envoyer, 800);
+  minuteur = setTimeout(envoyer, 700);
 }
 function appel(methode, corps){
+  var ctl = window.AbortController ? new AbortController() : null;
+  var t = ctl ? setTimeout(function(){ ctl.abort(); }, 10000) : null;
   return fetch('/api/data', {
     method: methode,
     headers: { 'Content-Type':'application/json', 'x-code': encodeURIComponent(code()) },
-    body: corps ? JSON.stringify(corps) : undefined
-  });
+    body: corps ? JSON.stringify(corps) : undefined,
+    signal: ctl ? ctl.signal : undefined
+  }).then(function(r){ clearTimeout(t); return r; }, function(e){ clearTimeout(t); throw e; });
+}
+function codeChange(){
+  oublierCode();
+  ecranCode('Le code a changé. Saisissez-le à nouveau.');
 }
 function envoyer(){
+  if(envoiEnCours){ renvoyer = true; return Promise.resolve(); }
+  envoiEnCours = true;
   return appel('PUT', { contenu: D }).then(function(r){
-    if(r.status === 401){ oublierCode(); ecranCode('Le code a changé. Saisissez-le à nouveau.'); return; }
+    if(r.status === 401){ codeChange(); return null; }
     if(!r.ok) throw new Error('envoi');
-    sync.etat = 'ok'; sync.derniere = new Date(); majEtatSync();
-  }).catch(function(){ sync.etat = 'attente'; majEtatSync(); });
+    return r.json();
+  }).then(function(j){
+    if(!j) return;
+    if(j.besoin === 'creation'){ oublierCode(); ecranCreation(''); return; }
+    sync.etat = 'ok'; sync.derniere = new Date();
+    if(j.contenu){
+      var avant = signature(D);
+      D = fusionner(D, j.contenu);
+      sauvegardeLocale();
+      if(signature(D) !== avant) rafraichirVue();
+    }
+    majEtatSync();
+  }).catch(function(){
+    sync.etat = 'attente'; majEtatSync();
+  }).then(function(){
+    envoiEnCours = false;
+    if(renvoyer){ renvoyer = false; planifierEnvoi(); }
+  });
 }
-/* Compare la version du serveur et celle du téléphone : la plus récente gagne. */
-function fusion(s){
+/* Reçoit les données du serveur, les fusionne avec celles du téléphone, renvoie ce qui manque. */
+function appliquerServeur(s){
   sync.etat = 'ok'; sync.derniere = new Date();
-  if(s && Array.isArray(s.rdv) && (s.maj || 0) >= (D.maj || 0)){
-    D = s; memoire = D;
-    try{ localStorage.setItem(CLE, JSON.stringify(D)); }catch(e){}
-  } else if(!s || (D.maj || 0) > (s.maj || 0)){
-    envoyer();
-  }
+  if(!s){ envoyer(); return true; }
+  var m = fusionner(D, s);
+  var change = signature(m) !== signature(D);
+  var serveurManque = signature(m) !== signature(s);
+  D = m; sauvegardeLocale();
+  if(serveurManque) envoyer();
+  return change;
 }
 function demarrer(){
   appel('GET').then(function(r){
@@ -232,26 +318,27 @@ function demarrer(){
     return r.json();
   }).then(function(j){
     if(!j) return;
+    if(j.besoin === 'creation'){ oublierCode(); ecranCreation(''); return; }
     document.body.classList.remove('verrou');
-    fusion(j.contenu);
-    if(!document.getElementById('voile')) afficher();
+    appliquerServeur(j.contenu);
+    if(!document.getElementById('voile')) afficher(true);
   }).catch(function(){
     sync.etat = code() ? 'hors' : 'local';
     document.body.classList.remove('verrou');
-    afficher();
+    afficher(true);
   });
 }
 function rafraichir(manuel){
-  if(!code() || document.body.classList.contains('verrou')) return;
+  if(sync.etat === 'local' || !code() || document.body.classList.contains('verrou')) return;
   appel('GET').then(function(r){
-    if(r.status === 401){ oublierCode(); ecranCode('Le code a changé. Saisissez-le à nouveau.'); return null; }
+    if(r.status === 401){ codeChange(); return null; }
     if(!r.ok) throw new Error('serveur');
     return r.json();
   }).then(function(j){
     if(!j) return;
-    var avant = D.maj;
-    fusion(j.contenu);
-    if(D.maj !== avant && !document.getElementById('voile')) afficher();
+    if(j.besoin === 'creation'){ oublierCode(); ecranCreation(''); return; }
+    var change = appliquerServeur(j.contenu);
+    if(change) rafraichirVue();
     majEtatSync();
     if(manuel) toast('Synchronisé');
   }).catch(function(){
@@ -259,23 +346,45 @@ function rafraichir(manuel){
     if(manuel) toast('Connexion impossible');
   });
 }
+function rafraichirVue(){
+  if(document.body.classList.contains('verrou') || document.getElementById('voile')) return;
+  var q = document.getElementById('q');
+  if(q && document.activeElement === q){
+    var z = document.getElementById('liste-agenda');
+    if(z) z.innerHTML = listeAgenda();
+    return;
+  }
+  afficher(true);
+}
 function ecranCode(msg){
   document.body.classList.add('verrou');
   fermer();
   document.getElementById('vue').innerHTML =
     '<p class="salon">Woman Dream</p><h1>Bienvenue</h1>' +
-    '<p class="note">Saisissez votre code d’accès pour retrouver vos rendez-vous sur ce téléphone.</p>' +
+    '<p class="note">Saisissez votre code d’accès pour retrouver les rendez-vous partagés sur ce téléphone.</p>' +
     '<label for="code">Code d’accès</label>' +
     '<input id="code" class="champ" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" placeholder="Votre code d’accès">' +
     '<div class="erreur" id="code-err">' + esc(msg || '') + '</div>' +
     '<button class="btn plein" data-a="entrer">Entrer</button>';
 }
+function ecranCreation(msg){
+  document.body.classList.add('verrou');
+  fermer();
+  document.getElementById('vue').innerHTML =
+    '<p class="salon">Woman Dream</p><h1>Créer votre code d’accès</h1>' +
+    '<p class="note">Ce code protège vos rendez-vous. Notez-le bien : il faudra le saisir une fois sur chaque téléphone.</p>' +
+    '<label for="code1">Code d’accès (6 caractères minimum)</label>' +
+    '<input id="code1" class="champ" type="password" autocomplete="new-password" autocapitalize="off" autocorrect="off" placeholder="Choisissez un code">' +
+    '<label for="code2">Confirmer le code</label>' +
+    '<input id="code2" class="champ" type="password" autocomplete="new-password" autocapitalize="off" autocorrect="off" placeholder="Saisissez-le une seconde fois">' +
+    '<div class="erreur" id="code-err">' + esc(msg || '') + '</div>' +
+    '<button class="btn plein" data-a="creerCode">Créer mon code</button>';
+}
 function entrerCode(){
-  var champ = document.getElementById('code');
   var err = document.getElementById('code-err');
-  var v = champ.value.trim();
+  var v = document.getElementById('code').value.trim();
   if(!v){ err.textContent = 'Saisissez votre code d’accès.'; return; }
-  try{ localStorage.setItem(CODE_CLE, v); }catch(e){ memCode = v; }
+  memoriserCode(v);
   err.textContent = 'Vérification en cours…';
   appel('GET').then(function(r){
     if(r.status === 401){ oublierCode(); err.textContent = 'Code incorrect. Vérifiez et réessayez.'; return null; }
@@ -283,16 +392,39 @@ function entrerCode(){
     return r.json();
   }).then(function(j){
     if(!j) return;
+    if(j.besoin === 'creation'){ oublierCode(); ecranCreation(''); return; }
     document.body.classList.remove('verrou');
-    fusion(j.contenu);
+    appliquerServeur(j.contenu);
     afficher();
   }).catch(function(){
     oublierCode();
     err.textContent = 'Connexion impossible. Vérifiez internet et réessayez.';
   });
 }
+function creerCode(){
+  var err = document.getElementById('code-err');
+  var a = document.getElementById('code1').value.trim();
+  var b = document.getElementById('code2').value.trim();
+  if(a.length < 6){ err.textContent = 'Le code doit contenir au moins 6 caractères.'; return; }
+  if(a !== b){ err.textContent = 'Les deux codes ne sont pas identiques.'; return; }
+  err.textContent = 'Création en cours…';
+  appel('POST', { action:'creer', code:a }).then(function(r){
+    if(r.status === 403) throw new Error('existe');
+    if(!r.ok) throw new Error('serveur');
+    memoriserCode(a);
+    return appel('GET').then(function(x){ return x.ok ? x.json() : null; });
+  }).then(function(j){
+    document.body.classList.remove('verrou');
+    sync.etat = 'ok'; sync.derniere = new Date();
+    if(j) appliquerServeur(j.contenu); else envoyer();
+    afficher();
+    toast('Code créé. Notez-le bien.');
+  }).catch(function(e){
+    err.textContent = e && e.message === 'existe' ? 'Un code existe déjà. Rechargez la page et saisissez-le.' : 'Connexion impossible. Réessayez.';
+  });
+}
 function texteSync(){
-  if(sync.etat === 'ok') return 'Synchronisation active' + (sync.derniere ? ' · dernière à ' + sync.derniere.toLocaleTimeString('fr-FR',{hour:'2-digit', minute:'2-digit'}) : '') + '. Vos rendez-vous sont accessibles depuis n’importe quel téléphone avec votre code.';
+  if(sync.etat === 'ok') return 'Synchronisation active' + (sync.derniere ? ' · dernière à ' + sync.derniere.toLocaleTimeString('fr-FR',{hour:'2-digit', minute:'2-digit'}) : '') + '. Les rendez-vous sont partagés entre tous les téléphones qui ont le code.';
   if(sync.etat === 'attente') return 'Pas de connexion. Les changements seront envoyés dès le retour du réseau.';
   if(sync.etat === 'hors') return 'Hors ligne. Les données de ce téléphone sont affichées.';
   return 'Synchronisation non activée : les données restent sur ce téléphone.';
@@ -303,14 +435,22 @@ function blocSync(){
 }
 function majEtatSync(){ var e = document.getElementById('etat-sync'); if(e) e.textContent = texteSync(); }
 document.addEventListener('visibilitychange', function(){
-  if(document.visibilityState === 'visible' && sync.etat !== 'local') rafraichir(false);
+  if(document.visibilityState === 'visible') rafraichir(false);
 });
-window.addEventListener('online', function(){ if(sync.etat !== 'local') rafraichir(false); });
-document.addEventListener('keydown', function(e){ if(e.key === 'Enter' && e.target.id === 'code') entrerCode(); });
+window.addEventListener('online', function(){ rafraichir(false); });
+setInterval(function(){
+  if(document.visibilityState === 'visible') rafraichir(false);
+}, 20000);
+document.addEventListener('keydown', function(e){
+  if(e.key !== 'Enter') return;
+  if(e.target.id === 'code') entrerCode();
+  if(e.target.id === 'code1' || e.target.id === 'code2') creerCode();
+});
 
 /* ---------- Outils ---------- */
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+function titre(s){ return s.split(' ').map(function(m){ return m ? cap(m) : m; }).join(' '); }
 function pad(n){ return (n < 10 ? '0' : '') + n; }
 function ymd(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
 function lireDate(s){ var p = s.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
@@ -318,31 +458,41 @@ function devise(){ return D.reglages.devise === 'EUR' ? '€' : 'FCFA'; }
 function argent(n){ return Math.round(n).toLocaleString('fr-FR') + ' ' + devise(); }
 function dateCourte(s){ return lireDate(s).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); }
 function dateLongue(s){ return cap(lireDate(s).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})); }
+function libelleJour(k){
+  if(k === aujourdhui) return 'Aujourd’hui';
+  var d = new Date(); d.setDate(d.getDate() + 1);
+  if(k === ymd(d)) return 'Demain';
+  return titre(lireDate(k).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'}));
+}
 function nid(){ return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function encaisse(a){ return a.solde ? a.total : Math.min(a.acompte || 0, a.total); }
 function reste(a){ return Math.max(0, a.total - encaisse(a)); }
 function actifs(){ return D.rdv.filter(function(a){ return a.statut !== 'Annulé'; }); }
-function trier(l){ return l.slice().sort(function(a,b){ return (a.date + a.heure).localeCompare(b.date + b.heure); }); }
-function classeStatut(s){ return s === 'Confirmé' ? 'ok' : s === 'En attente' ? 'att' : 'ann'; }
+function trier(l){ return l.slice().sort(function(a,b){ return (a.date + (a.heure || '')).localeCompare(b.date + (b.heure || '')); }); }
+function sansAccent(t){ return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+function champ(id){ return document.getElementById(id).value; }
 
 /* ---------- État de l'écran ---------- */
 var onglet = 'accueil';
 var aujourdhui = ymd(new Date());
-var moisAffiche = new Date(); moisAffiche.setDate(1);
-var jourChoisi = aujourdhui;
+var periode = 'tout';       /* accueil : tout · mois */
+var jourSemaine = '';       /* accueil : jour touché dans le graphique */
+var filtreAgenda = 'auj';   /* agenda : auj · venir · passes · tous */
+var rechercheAgenda = '';
+var retourRdv = null;
 
-function afficher(){
+function afficher(sansDefiler){
   aujourdhui = ymd(new Date());
   var v = document.getElementById('vue');
   v.innerHTML = onglet === 'accueil' ? vueAccueil() : onglet === 'agenda' ? vueAgenda() : vueTarifs();
   ['accueil','agenda','tarifs'].forEach(function(o){
     document.getElementById('o-' + o).classList.toggle('actif', o === onglet);
   });
-  window.scrollTo(0,0);
+  if(!sansDefiler) window.scrollTo(0,0);
 }
 
-/* ---------- Accueil ---------- */
-function ligneRdv(a, avecReste){
+/* ---------- Lignes de rendez-vous ---------- */
+function ligneRdv(a){
   var r = reste(a);
   return '<button class="ligne" data-a="modifier" data-id="' + a.id + '">' +
     '<div class="d">' + esc(dateCourte(a.date)) + '<br>' + esc(a.heure || '') + '</div>' +
@@ -351,11 +501,25 @@ function ligneRdv(a, avecReste){
     (r > 0 ? '<span class="badge">Reste ' + argent(r) + '</span>' : '<span class="badge ok">Soldé</span>') +
     '</div></button>';
 }
+function ligneAgenda(a){
+  var r = reste(a), badges = '';
+  if(a.statut === 'Annulé'){ badges = '<span class="badge ann">Annulé</span>'; }
+  else {
+    if(a.statut === 'En attente') badges += '<span class="badge att">En attente</span>';
+    badges += r > 0 ? '<span class="badge">Reste ' + argent(r) + '</span>' : '<span class="badge ok">Soldé</span>';
+  }
+  return '<button class="ligne' + (a.statut === 'Annulé' ? ' annule' : '') + '" data-a="modifier" data-id="' + a.id + '">' +
+    '<div class="d">' + esc(a.heure || '—') + '</div>' +
+    '<div><div class="nom">' + esc(a.cliente) + '</div><div class="sous">' + esc(a.prestation) + '</div></div>' +
+    '<div class="droite"><div class="montant">' + argent(a.total) + '</div>' + badges + '</div></button>';
+}
+
+/* ---------- Accueil ---------- */
 function vueAccueil(){
   var mois = aujourdhui.slice(0,7);
-  var duMois = actifs().filter(function(a){ return a.date.slice(0,7) === mois; });
+  var base = actifs().filter(function(a){ return periode === 'tout' || a.date.slice(0,7) === mois; });
   var enc = 0, res = 0, acomptes = 0;
-  duMois.forEach(function(a){ enc += encaisse(a); res += reste(a); if(!a.solde && reste(a) > 0) acomptes += encaisse(a); });
+  base.forEach(function(a){ enc += encaisse(a); res += reste(a); if(!a.solde && reste(a) > 0) acomptes += encaisse(a); });
   var tot = enc + res;
   var pe = tot ? (enc / tot * 100) : 0, pr = tot ? (res / tot * 100) : 0;
 
@@ -373,8 +537,8 @@ function vueAccueil(){
   }
   var colonnes = sem.map(function(s){
     var h = s.n ? Math.max(24, s.n / max * 120) : 8;
-    return '<div class="col' + (s.n ? ' plein' : '') + (s.k === aujourdhui ? ' auj' : '') + '">' +
-      '<div class="n">' + (s.n || '') + '</div><div class="barre" style="height:' + h + 'px"></div><div class="j">' + s.nom + '</div></div>';
+    return '<button class="col' + (s.n ? ' plein' : '') + (s.k === aujourdhui ? ' auj' : '') + (s.k === jourSemaine ? ' sel' : '') + '" data-a="jsem" data-id="' + s.k + '" aria-label="' + esc(libelleJour(s.k)) + ' : ' + s.n + ' rendez-vous">' +
+      '<div class="n">' + (s.n || '') + '</div><div class="barre" style="height:' + h + 'px"></div><div class="j">' + s.nom + '</div></button>';
   }).join('');
 
   var soldes = trier(actifs().filter(function(a){ return reste(a) > 0 && a.date <= aujourdhui; }));
@@ -382,7 +546,11 @@ function vueAccueil(){
   var prochains = trier(actifs().filter(function(a){ return a.date > aujourdhui; })).slice(0, 8);
 
   var h = '<p class="salon">' + esc(D.reglages.nom) + '</p>' +
-    '<div class="legende">Chiffre d’affaires du mois · ' + duMois.length + ' rendez-vous</div>' +
+    '<div class="segments" style="margin-bottom:14px">' +
+      '<button class="seg' + (periode === 'tout' ? ' on' : '') + '" data-a="periode" data-id="tout">Tout</button>' +
+      '<button class="seg' + (periode === 'mois' ? ' on' : '') + '" data-a="periode" data-id="mois">Ce mois-ci</button>' +
+    '</div>' +
+    '<div class="legende">Chiffre d’affaires' + (periode === 'mois' ? ' du mois' : '') + ' · ' + base.length + ' rendez-vous</div>' +
     '<div class="piste"><i class="a" style="width:' + pe + '%"></i><i class="b" style="width:' + pr + '%"></i></div>' +
     '<div class="duo">' +
       '<div><div class="lib"><span class="pastille" style="background:var(--vert)"></span>Encaissé</div><div class="gros">' + argent(enc) + '</div></div>' +
@@ -390,7 +558,16 @@ function vueAccueil(){
     '</div>' +
     '<p class="note">Dont ' + argent(acomptes) + ' d’acomptes reçus sur des soldes encore ouverts.</p>' +
     '<h2>Cette semaine</h2><div class="semaine">' + colonnes + '</div>' +
-    '<p class="legende" style="margin-top:14px">' + nSem + ' rendez-vous · ' + argent(cSem) + '</p>';
+    '<p class="legende" style="margin-top:14px">' + nSem + ' rendez-vous · ' + argent(cSem) + '</p>' +
+    '<p class="astuce">Touchez un jour pour voir ses rendez-vous.</p>';
+
+  if(jourSemaine){
+    var lj = trier(actifs().filter(function(a){ return a.date === jourSemaine; }));
+    h += '<h2 class="grp">' + esc(libelleJour(jourSemaine)) + '</h2>';
+    h += lj.length ? lj.map(ligneAgenda).join('') :
+      '<div class="vide">Aucun rendez-vous ce jour-là.</div><button class="btn contour" data-a="nouveauJour" data-id="' + jourSemaine + '">Ajouter un rendez-vous ce jour-là</button>';
+    h += '<button class="lien" data-a="jsem" data-id="' + jourSemaine + '">Fermer ce jour</button>';
+  }
 
   h += '<h2>Soldes à encaisser</h2>';
   h += soldes.length ? soldes.map(function(a){
@@ -406,40 +583,45 @@ function vueAccueil(){
   h += '<h2>Prochains rendez-vous</h2>';
   h += prochains.length ? prochains.map(function(a){ return ligneRdv(a); }).join('') :
     '<div class="vide">Aucun rendez-vous à venir. Touchez le bouton + pour en ajouter un.</div>';
+  h += '<button class="btn plein" style="margin-top:26px" data-a="prestation" data-id="">Ajouter une prestation</button>';
   return h;
 }
 
 /* ---------- Agenda ---------- */
-function vueAgenda(){
-  var an = moisAffiche.getFullYear(), mo = moisAffiche.getMonth();
-  var titre = moisAffiche.toLocaleDateString('fr-FR',{month:'long', year:'numeric'});
-  var premier = new Date(an, mo, 1);
-  var decal = (premier.getDay() + 6) % 7;
-  var nbJours = new Date(an, mo + 1, 0).getDate();
-  var occupes = {};
-  actifs().forEach(function(a){ occupes[a.date] = true; });
-
-  var cases = ['L','M','M','J','V','S','D'].map(function(x){ return '<div class="ent">' + x + '</div>'; }).join('');
-  for(var i = 0; i < decal; i++) cases += '<div></div>';
-  for(var n = 1; n <= nbJours; n++){
-    var k = an + '-' + pad(mo+1) + '-' + pad(n);
-    cases += '<button class="jour' + (k === aujourdhui ? ' auj' : '') + (k === jourChoisi ? ' sel' : '') + '" data-a="jour" data-id="' + k + '" aria-label="' + esc(dateLongue(k)) + '">' + n + (occupes[k] ? '<span class="pt"></span>' : '') + '</button>';
+function listeAgenda(){
+  var q = sansAccent(rechercheAgenda.trim());
+  var l = D.rdv.filter(function(a){
+    if(filtreAgenda === 'auj' && a.date !== aujourdhui) return false;
+    if(filtreAgenda === 'venir' && a.date < aujourdhui) return false;
+    if(filtreAgenda === 'passes' && a.date >= aujourdhui) return false;
+    if(q && sansAccent(a.cliente + ' ' + a.prestation + ' ' + (a.telephone || '')).indexOf(q) === -1) return false;
+    return true;
+  });
+  l = trier(l);
+  if(filtreAgenda === 'passes' || filtreAgenda === 'tous') l.reverse();
+  if(!l.length){
+    var vide = q ? 'Aucun résultat pour cette recherche.' :
+      filtreAgenda === 'auj' ? 'Aucun rendez-vous aujourd’hui.' :
+      filtreAgenda === 'venir' ? 'Aucun rendez-vous à venir.' :
+      filtreAgenda === 'passes' ? 'Aucun rendez-vous passé.' :
+      'Aucun rendez-vous pour l’instant. Touchez le bouton + pour en ajouter un.';
+    return '<div class="vide">' + vide + '</div>';
   }
-  var liste = trier(D.rdv.filter(function(a){ return a.date === jourChoisi; }));
-  var h = '<div class="mois"><h1>' + esc(titre) + '</h1><div class="nav-mois">' +
-    '<button class="rond" data-a="mois" data-id="-1" aria-label="Mois précédent">‹</button>' +
-    '<button class="rond" data-a="mois" data-id="1" aria-label="Mois suivant">›</button></div></div>' +
-    '<button class="lien" data-a="auj">Aujourd’hui</button>' +
-    '<div class="jours">' + cases + '</div>' +
-    '<h2>' + esc(dateLongue(jourChoisi)) + '</h2>';
-  h += liste.length ? liste.map(function(a){
-    return '<button class="ligne" data-a="modifier" data-id="' + a.id + '">' +
-      '<div class="d">' + esc(a.heure || '') + '</div>' +
-      '<div><div class="nom">' + esc(a.cliente) + '</div><div class="sous">' + esc(a.prestation) + '</div></div>' +
-      '<div class="droite"><div class="montant">' + argent(a.total) + '</div><span class="badge ' + classeStatut(a.statut) + '">' + esc(a.statut) + '</span></div></button>';
-  }).join('') : '<div class="vide">Aucun rendez-vous ce jour-là.</div>';
-  h += '<button class="btn plein" data-a="nouveau">Nouveau rendez-vous</button>';
+  var h = '', dernier = '';
+  l.forEach(function(a){
+    if(a.date !== dernier){ h += '<h2 class="grp">' + esc(libelleJour(a.date)) + '</h2>'; dernier = a.date; }
+    h += ligneAgenda(a);
+  });
   return h;
+}
+function vueAgenda(){
+  var onglets = [['auj','Aujourd’hui'],['venir','À venir'],['passes','Passés'],['tous','Tous']].map(function(o){
+    return '<button class="seg' + (filtreAgenda === o[0] ? ' on' : '') + '" data-a="filtre" data-id="' + o[0] + '" aria-pressed="' + (filtreAgenda === o[0]) + '">' + o[1] + '</button>';
+  }).join('');
+  return '<h1 style="margin-bottom:18px">Agenda</h1>' +
+    '<div class="segments">' + onglets + '</div>' +
+    '<input id="q" class="champ" type="search" placeholder="Chercher une cliente ou une prestation" autocomplete="off" enterkeyhint="search" value="' + esc(rechercheAgenda) + '" style="margin-top:12px">' +
+    '<div id="liste-agenda">' + listeAgenda() + '</div>';
 }
 
 /* ---------- Tarifs et réglages ---------- */
@@ -456,7 +638,7 @@ function vueTarifs(){
     '<button class="btn contour" data-a="restaurerFichier">Restaurer depuis un fichier</button>' +
     '<button class="btn contour" data-a="copier">Copier le texte de sauvegarde</button>' +
     '<button class="btn contour" data-a="restaurerTexte">Restaurer depuis du texte</button>' +
-    '<p class="note">' + (D.derniereSauvegarde ? 'Dernière sauvegarde : ' + esc(new Date(D.derniereSauvegarde).toLocaleString('fr-FR',{dateStyle:'long', timeStyle:'short'})) + '.' : 'Aucune sauvegarde faite pour l’instant. Les données restent sur ce téléphone tant que vous ne sauvegardez pas.') + '</p>' +
+    '<p class="note">' + (D.derniereSauvegarde ? 'Dernière sauvegarde : ' + esc(new Date(D.derniereSauvegarde).toLocaleString('fr-FR',{dateStyle:'long', timeStyle:'short'})) + '.' : 'Aucune sauvegarde faite pour l’instant. Pensez à en faire une de temps en temps.') + '</p>' +
     blocSync() +
     '<input type="file" id="fichier" accept=".json,application/json" hidden>';
   return h;
@@ -483,28 +665,48 @@ function confirmer(message, oui, libelle){
   document.getElementById('c-oui').onclick = function(){ fermer(); oui(); };
 }
 
-function fenetreRdv(id, dateInit){
+function lireFormRdv(){
+  return {
+    cliente: champ('f-cl').trim(), telephone: champ('f-tel').trim(), prestation: champ('f-pr'),
+    date: champ('f-dt'), heure: champ('f-he'),
+    total: Math.max(0, parseInt(champ('f-to'), 10) || 0), acompte: Math.max(0, parseInt(champ('f-ac'), 10) || 0),
+    statut: champ('f-st'), solde: document.getElementById('f-so').checked
+  };
+}
+function fenetreRdv(id, dateInit, brouillon){
   var a = id ? D.rdv.find(function(x){ return x.id === id; }) : null;
-  var e = a || { cliente:'', telephone:'', prestation:(D.prestations[0] ? D.prestations[0].nom : ''), date:dateInit || jourChoisi || aujourdhui, heure:'10:00', total:(D.prestations[0] ? D.prestations[0].prix : 0), acompte:0, statut:'Confirmé', solde:false };
-  var opts = D.prestations.map(function(p){ return '<option value="' + esc(p.nom) + '" data-prix="' + p.prix + '"' + (p.nom === e.prestation ? ' selected' : '') + '>' + esc(p.nom) + ' · ' + argent(p.prix) + '</option>'; }).join('');
-  if(a && !D.prestations.some(function(p){ return p.nom === a.prestation; })) opts = '<option selected>' + esc(a.prestation) + '</option>' + opts;
+  var p0 = D.prestations[0];
+  var e = brouillon || a || { cliente:'', telephone:'', prestation:(p0 ? p0.nom : ''), date:dateInit || aujourdhui, heure:'10:00', total:(p0 ? p0.prix : 0), acompte:0, statut:'Confirmé', solde:false };
+  var opts = '';
+  if(!e.prestation) opts += '<option value="" selected>Choisir une prestation</option>';
+  opts += D.prestations.map(function(p){ return '<option value="' + esc(p.nom) + '" data-prix="' + p.prix + '"' + (p.nom === e.prestation ? ' selected' : '') + '>' + esc(p.nom) + ' · ' + argent(p.prix) + '</option>'; }).join('');
+  if(e.prestation && !D.prestations.some(function(p){ return p.nom === e.prestation; })) opts = '<option value="' + esc(e.prestation) + '" selected>' + esc(e.prestation) + '</option>' + opts;
+  opts += '<option value="__nouvelle__">＋ Nouvelle prestation…</option>';
   var statuts = ['Confirmé','En attente','Annulé'].map(function(s){ return '<option' + (s === e.statut ? ' selected' : '') + '>' + s + '</option>'; }).join('');
   ouvrir('<h2>' + (a ? 'Modifier le rendez-vous' : 'Nouveau rendez-vous') + '</h2>' +
     '<label for="f-cl">Cliente</label><input id="f-cl" class="champ" placeholder="Nom de la cliente" value="' + esc(e.cliente) + '">' +
     '<label for="f-tel">Téléphone (WhatsApp)</label><input id="f-tel" class="champ" type="tel" inputmode="tel" placeholder="Ex. 07 00 00 00 00" value="' + esc(e.telephone) + '">' +
     '<label for="f-pr">Prestation</label><select id="f-pr" class="champ">' + opts + '</select>' +
-    '<div class="deux"><div><label for="f-dt">Date</label><input id="f-dt" class="champ" type="date" lang="fr" value="' + e.date + '"></div>' +
+    '<div class="deux"><div><label for="f-dt">Date</label><input id="f-dt" class="champ" type="date" lang="fr" value="' + esc(e.date) + '"></div>' +
     '<div><label for="f-he">Heure</label><input id="f-he" class="champ" type="time" lang="fr" value="' + esc(e.heure) + '"></div></div>' +
     '<div class="deux"><div><label for="f-to">Prix total (' + devise() + ')</label><input id="f-to" class="champ" type="number" inputmode="numeric" min="0" value="' + e.total + '"></div>' +
     '<div><label for="f-ac">Acompte reçu</label><input id="f-ac" class="champ" type="number" inputmode="numeric" min="0" value="' + (e.acompte || 0) + '"></div></div>' +
     '<label for="f-st">Statut</label><select id="f-st" class="champ">' + statuts + '</select>' +
     '<label class="case"><input type="checkbox" id="f-so"' + (e.solde ? ' checked' : '') + '>Solde entièrement payé</label>' +
     '<div class="erreur" id="f-err"></div>' +
-    '<button class="btn plein" data-a="enregistrerRdv" data-id="' + (id || '') + '">Enregistrer</button>' +
+    '<button class="btn plein" data-a="enregistrerRdv" data-id="' + (a ? a.id : '') + '">Enregistrer</button>' +
     (a && a.telephone ? '<a class="btn wa" target="_blank" rel="noopener" href="' + lienWhatsApp(a) + '">Écrire sur WhatsApp</a>' : '') +
-    (a ? '<button class="btn danger" data-a="supprimerRdv" data-id="' + id + '">Supprimer</button>' : '') +
+    (a ? '<button class="btn danger" data-a="supprimerRdv" data-id="' + a.id + '">Supprimer</button>' : '') +
     '<button class="btn contour" data-a="fermer">Annuler</button>');
+  var derniere = e.prestation || '';
   document.getElementById('f-pr').addEventListener('change', function(){
+    if(this.value === '__nouvelle__'){
+      var b = lireFormRdv(); b.prestation = derniere;
+      retourRdv = { id: a ? a.id : '', brouillon: b };
+      fenetrePrestation(null, true);
+      return;
+    }
+    derniere = this.value;
     var o = this.options[this.selectedIndex]; if(o && o.dataset.prix) document.getElementById('f-to').value = o.dataset.prix;
   });
 }
@@ -515,26 +717,23 @@ function lienWhatsApp(a){
   return 'https://wa.me/' + n + '?text=' + encodeURIComponent(msg);
 }
 function enregistrerRdv(id){
-  var cl = document.getElementById('f-cl').value.trim();
-  var dt = document.getElementById('f-dt').value;
+  var f = lireFormRdv();
   var err = document.getElementById('f-err');
-  if(!cl){ err.textContent = 'Indiquez le nom de la cliente.'; return; }
-  if(!dt){ err.textContent = 'Choisissez une date.'; return; }
-  var total = Math.max(0, parseInt(document.getElementById('f-to').value, 10) || 0);
-  var acompte = Math.max(0, parseInt(document.getElementById('f-ac').value, 10) || 0);
-  if(acompte > total){ err.textContent = 'L’acompte ne peut pas dépasser le prix total.'; return; }
-  var o = {
-    id: id || nid(), cliente: cl, telephone: document.getElementById('f-tel').value.trim(),
-    prestation: document.getElementById('f-pr').value, date: dt, heure: document.getElementById('f-he').value || '',
-    total: total, acompte: acompte, statut: document.getElementById('f-st').value, solde: document.getElementById('f-so').checked
-  };
-  if(id){ D.rdv = D.rdv.map(function(x){ return x.id === id ? o : x; }); } else { D.rdv.push(o); }
-  sauver(); fermer(); jourChoisi = dt;
-  var p = lireDate(dt); moisAffiche = new Date(p.getFullYear(), p.getMonth(), 1);
+  if(!f.cliente){ err.textContent = 'Indiquez le nom de la cliente.'; return; }
+  if(!f.prestation || f.prestation === '__nouvelle__'){ err.textContent = 'Choisissez une prestation.'; return; }
+  if(!f.date){ err.textContent = 'Choisissez une date.'; return; }
+  if(f.acompte > f.total){ err.textContent = 'L’acompte ne peut pas dépasser le prix total.'; return; }
+  var o = { id: id || nid(), cliente: f.cliente, telephone: f.telephone, prestation: f.prestation, date: f.date, heure: f.heure,
+    total: f.total, acompte: f.acompte, statut: f.statut, solde: f.solde, maj: Date.now() };
+  var existe = id && D.rdv.some(function(x){ return x.id === id; });
+  if(existe){ D.rdv = D.rdv.map(function(x){ return x.id === id ? o : x; }); } else { D.rdv.push(o); }
+  sauver(); fermer();
+  if(onglet === 'agenda'){ filtreAgenda = f.date === aujourdhui ? 'auj' : (f.date > aujourdhui ? 'venir' : 'passes'); rechercheAgenda = ''; }
   afficher(); toast('Rendez-vous enregistré');
 }
 
-function fenetrePrestation(id){
+function fenetrePrestation(id, retour){
+  if(!retour) retourRdv = null;
   var p = id ? D.prestations.find(function(x){ return x.id === id; }) : null;
   ouvrir('<h2>' + (p ? 'Modifier la prestation' : 'Nouvelle prestation') + '</h2>' +
     '<label for="s-nom">Nom de la prestation</label><input id="s-nom" class="champ" placeholder="Ex. Maquillage soirée" value="' + esc(p ? p.nom : '') + '">' +
@@ -542,13 +741,36 @@ function fenetrePrestation(id){
     '<div class="erreur" id="s-err"></div>' +
     '<button class="btn plein" data-a="enregistrerPrestation" data-id="' + (id || '') + '">Enregistrer</button>' +
     (p ? '<button class="btn danger" data-a="supprimerPrestation" data-id="' + id + '">Supprimer</button>' : '') +
-    '<button class="btn contour" data-a="fermer">Annuler</button>');
+    '<button class="btn contour" data-a="annulerPrestation">Annuler</button>');
+}
+function enregistrerPrestation(id){
+  var nom = champ('s-nom').trim();
+  var prix = parseInt(champ('s-prix'), 10);
+  var er = document.getElementById('s-err');
+  if(!nom){ er.textContent = 'Indiquez le nom de la prestation.'; return; }
+  if(isNaN(prix) || prix < 0){ er.textContent = 'Indiquez un prix valide.'; return; }
+  var maj = Date.now();
+  if(id && D.prestations.some(function(p){ return p.id === id; })){
+    D.prestations = D.prestations.map(function(p){ return p.id === id ? { id:id, nom:nom, prix:prix, maj:maj } : p; });
+  } else {
+    D.prestations.push({ id: id || nid(), nom:nom, prix:prix, maj:maj });
+  }
+  sauver();
+  if(retourRdv){
+    var r = retourRdv; retourRdv = null;
+    r.brouillon.prestation = nom; r.brouillon.total = prix;
+    afficher(true);
+    fenetreRdv(r.id || null, null, r.brouillon);
+    toast('Prestation ajoutée');
+    return;
+  }
+  fermer(); afficher(true); toast('Prestation enregistrée');
 }
 
 /* ---------- Sauvegarde ---------- */
 function texteSauvegarde(){ return JSON.stringify(D); }
 function nomFichier(){ return 'woman-dream-sauvegarde-' + ymd(new Date()) + '.json'; }
-function marquerSauvegarde(){ D.derniereSauvegarde = new Date().toISOString(); sauver(); afficher(); }
+function marquerSauvegarde(){ D.derniereSauvegarde = new Date().toISOString(); sauver(); afficher(true); }
 function sauvegarder(){
   var contenu = texteSauvegarde();
   var fichier;
@@ -588,6 +810,15 @@ function restaurer(texte){
   var o;
   try{ o = JSON.parse(texte); }catch(e){ return false; }
   if(!o || !Array.isArray(o.rdv) || !Array.isArray(o.prestations) || !o.reglages) return false;
+  o = normaliser(o);
+  var maintenant = Date.now();
+  var ids = {};
+  o.rdv.forEach(function(x){ x.maj = maintenant; ids[x.id] = true; });
+  o.prestations.forEach(function(x){ x.maj = maintenant; ids[x.id] = true; });
+  /* ce qui n'est pas dans la sauvegarde est considéré comme supprimé */
+  Object.keys(D.supprimes).forEach(function(k){ if(!o.supprimes[k] || o.supprimes[k] < D.supprimes[k]) o.supprimes[k] = D.supprimes[k]; });
+  D.rdv.concat(D.prestations).forEach(function(x){ if(!ids[x.id]) o.supprimes[x.id] = maintenant; });
+  o.reglagesMaj = maintenant;
   D = o; sauver(); afficher(); return true;
 }
 function fenetreRestaurerTexte(){
@@ -602,29 +833,25 @@ function fenetreRestaurerTexte(){
 document.addEventListener('click', function(ev){
   var el = ev.target.closest('[data-a]'); if(!el) return;
   var a = el.dataset.a, id = el.dataset.id;
-  if(a === 'onglet'){ onglet = id; afficher(); }
-  else if(a === 'nouveau'){ fenetreRdv(null, onglet === 'agenda' ? jourChoisi : aujourdhui); }
+  if(a === 'onglet'){ onglet = id; rechercheAgenda = ''; afficher(); }
+  else if(a === 'nouveau'){ fenetreRdv(null, aujourdhui); }
+  else if(a === 'nouveauJour'){ fenetreRdv(null, id); }
   else if(a === 'modifier'){ fenetreRdv(id); }
   else if(a === 'fermer'){ fermer(); }
+  else if(a === 'filtre'){ filtreAgenda = id; afficher(); }
+  else if(a === 'periode'){ periode = id; afficher(true); }
+  else if(a === 'jsem'){ jourSemaine = (jourSemaine === id) ? '' : id; afficher(true); }
   else if(a === 'enregistrerRdv'){ enregistrerRdv(id || null); }
-  else if(a === 'supprimerRdv'){ confirmer('Supprimer ce rendez-vous ? Cette action est définitive.', function(){ D.rdv = D.rdv.filter(function(x){ return x.id !== id; }); sauver(); afficher(); toast('Rendez-vous supprimé'); }, 'Supprimer'); }
-  else if(a === 'encaisser'){ D.rdv.forEach(function(x){ if(x.id === id) x.solde = true; }); sauver(); afficher(); toast('Solde encaissé'); }
-  else if(a === 'jour'){ jourChoisi = id; afficher(); window.scrollTo(0, document.body.scrollHeight * 0.35); }
-  else if(a === 'mois'){ moisAffiche = new Date(moisAffiche.getFullYear(), moisAffiche.getMonth() + parseInt(id,10), 1); afficher(); }
-  else if(a === 'auj'){ jourChoisi = aujourdhui; var n = new Date(); moisAffiche = new Date(n.getFullYear(), n.getMonth(), 1); afficher(); }
+  else if(a === 'supprimerRdv'){ confirmer('Supprimer ce rendez-vous ? Cette action est définitive.', function(){ D.rdv = D.rdv.filter(function(x){ return x.id !== id; }); D.supprimes[id] = Date.now(); sauver(); afficher(true); toast('Rendez-vous supprimé'); }, 'Supprimer'); }
+  else if(a === 'encaisser'){ D.rdv.forEach(function(x){ if(x.id === id){ x.solde = true; x.maj = Date.now(); } }); sauver(); afficher(true); toast('Solde encaissé'); }
   else if(a === 'prestation'){ fenetrePrestation(id || null); }
-  else if(a === 'enregistrerPrestation'){
-    var nom = document.getElementById('s-nom').value.trim();
-    var prix = parseInt(document.getElementById('s-prix').value, 10);
-    var er = document.getElementById('s-err');
-    if(!nom){ er.textContent = 'Indiquez le nom de la prestation.'; return; }
-    if(isNaN(prix) || prix < 0){ er.textContent = 'Indiquez un prix valide.'; return; }
-    if(id){ D.prestations.forEach(function(p){ if(p.id === id){ p.nom = nom; p.prix = prix; } }); }
-    else { D.prestations.push({id:nid(), nom:nom, prix:prix}); }
-    sauver(); fermer(); afficher(); toast('Prestation enregistrée');
+  else if(a === 'enregistrerPrestation'){ enregistrerPrestation(id || null); }
+  else if(a === 'annulerPrestation'){
+    if(retourRdv){ var r = retourRdv; retourRdv = null; fenetreRdv(r.id || null, null, r.brouillon); } else fermer();
   }
-  else if(a === 'supprimerPrestation'){ confirmer('Supprimer cette prestation ? Les rendez-vous existants ne changent pas.', function(){ D.prestations = D.prestations.filter(function(p){ return p.id !== id; }); sauver(); afficher(); toast('Prestation supprimée'); }, 'Supprimer'); }
+  else if(a === 'supprimerPrestation'){ confirmer('Supprimer cette prestation ? Les rendez-vous existants ne changent pas.', function(){ D.prestations = D.prestations.filter(function(p){ return p.id !== id; }); D.supprimes[id] = Date.now(); sauver(); afficher(true); toast('Prestation supprimée'); }, 'Supprimer'); }
   else if(a === 'entrer'){ entrerCode(); }
+  else if(a === 'creerCode'){ creerCode(); }
   else if(a === 'synchro'){ rafraichir(true); }
   else if(a === 'deconnecter'){
     confirmer('Déconnecter ce téléphone ? Vos rendez-vous restent enregistrés en ligne. Vous les retrouverez en saisissant votre code.', function(){
@@ -644,10 +871,17 @@ document.addEventListener('click', function(ev){
     }, 'Restaurer');
   }
 });
+document.addEventListener('input', function(ev){
+  if(ev.target.id === 'q'){
+    rechercheAgenda = ev.target.value;
+    var z = document.getElementById('liste-agenda');
+    if(z) z.innerHTML = listeAgenda();
+  }
+});
 document.addEventListener('change', function(ev){
   var t = ev.target;
-  if(t.id === 'r-nom'){ D.reglages.nom = t.value.trim() || 'Woman Dream'; sauver(); toast('Nom enregistré'); }
-  else if(t.id === 'r-dev'){ D.reglages.devise = t.value; sauver(); afficher(); toast('Devise enregistrée'); }
+  if(t.id === 'r-nom'){ D.reglages.nom = t.value.trim() || 'Woman Dream'; D.reglagesMaj = Date.now(); sauver(); toast('Nom enregistré'); }
+  else if(t.id === 'r-dev'){ D.reglages.devise = t.value; D.reglagesMaj = Date.now(); sauver(); afficher(true); toast('Devise enregistrée'); }
   else if(t.id === 'fichier' && t.files[0]){
     var lecteur = new FileReader();
     lecteur.onload = function(){
@@ -658,9 +892,16 @@ document.addEventListener('change', function(ev){
     lecteur.readAsText(t.files[0]);
   }
 });
+
+/* ---------- Démarrage ---------- */
 if(code()){ afficher(); }
 else { document.getElementById('vue').innerHTML = '<p class="vide">Chargement…</p>'; }
 demarrer();
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    try{ navigator.serviceWorker.register('/sw.js').catch(function(){}); }catch(e){}
+  });
+}
 </script>
 </body>
 </html>
