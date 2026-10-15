@@ -159,6 +159,17 @@ module.exports = async (req, res) => {
       res.status(200).json({ ok: true });
       return;
     }
+        if (req.method === 'PUT' && req.body && req.body.abonnement) {
+      const ab = req.body.abonnement;
+      if (!ab.endpoint) { res.status(400).json({ erreur: 'Invalide' }); return; }
+      const r = (await sql`SELECT contenu FROM womandream WHERE id = 3`)[0];
+      const abos = ((r && r.contenu.abos) || []).filter((x) => x.endpoint !== ab.endpoint);
+      abos.push(ab);
+      await sql`INSERT INTO womandream (id, contenu) VALUES (3, ${JSON.stringify({ abos })}::jsonb)
+        ON CONFLICT (id) DO UPDATE SET contenu = EXCLUDED.contenu, maj = now()`;
+      res.status(200).json({ ok: true });
+      return;
+    }
     if (req.method === 'GET') {
       res.status(200).json({ contenu: donnees ? donnees.contenu : null });
       return;
