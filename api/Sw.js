@@ -1,4 +1,4 @@
-const VERSION = 'womandream-v2';
+const VERSION = 'womandream-v3';
 const FICHIERS = ['/', '/index.html', '/manifest.webmanifest', '/icone-180.png', '/icone-192.png', '/icone-512.png'];
 
 self.addEventListener('install', (e) => {
